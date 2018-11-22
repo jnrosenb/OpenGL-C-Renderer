@@ -18,11 +18,17 @@ uniform int specExponent;
 
 in vec4 normal_vector;
 in vec4 light_vector;
+in vec4 shadowSpacePos;
 
 out vec4 frag_color;
 
+uniform sampler2D shadowTexture;
+
+float shadowCalculations(vec4 ShadowSpacePos);
+
 void main(void) 
 {
+  float shadowed = shadowCalculations(shadowSpacePos);
   vec3 ambient = 0.15f * light_color * diffuse_color;
 
   vec4 m = normalize(normal_vector);
@@ -33,7 +39,31 @@ void main(void)
   r = normalize(r);
   vec3 specular = pow(max(dot(r,L),0), specExponent) * vec3(1,1,1) * light_color;
 
-  vec3 finalColor = diffuse + specular + ambient;
+  //vec3 finalColor = diffuse + specular + ambient;
+  vec3 finalColor = ambient + shadowed * ( diffuse + specular );
   frag_color = vec4(finalColor ,1);
+}
+
+float shadowCalculations(vec4 ShadowSpacePos)
+{
+	///////////////////////////////
+	// CHANGE FOR EFFICIENT CODE //
+	///////////////////////////////
+	
+	//if (ShadowSpacePos.w < 0.0f)
+	//	return 1.0f;
+
+	vec3 ndc = vec3(ShadowSpacePos.xyz / ShadowSpacePos.w);
+	ndc = (ndc * 0.5f) + 0.5f;
+
+	float depthTest = (texture(shadowTexture, ndc.xy)).x;
+	float currentDepth = ndc.z;
+
+	if ((ndc.x - 0.5f)*(ndc.x - 0.5f) + (ndc.y - 0.5f)*(ndc.y - 0.5f) > 0.25f)
+		return 0.0f;
+
+	float bias = 0.0005f;
+	float shadow = currentDepth - bias < depthTest  ? 1.0f : 0.0f;
+	return (shadow);
 }
 

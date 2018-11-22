@@ -1,3 +1,14 @@
+//////////////////////////////////////////
+// HEADER								//
+//										//
+// Name: Jose Rosenbluth Chiu			//
+// Course Number: CS541					//
+// Programming Assignment number: #5	//
+// Task #1								//
+// Due date: 12/06/2018       			//
+//                  					//
+//////////////////////////////////////////
+
 #include "MaterialSkybox.h"
 #include <iostream>
 
@@ -65,7 +76,8 @@ void MaterialSkybox::sendUniformValues(glm::mat4& M, glm::mat4& NT, glm::mat4 co
 
 void MaterialSkybox::bindTexture()
 {
-	glActiveTexture(GL_TEXTURE0);
+	//Use 2 for skybox for now
+	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
 
 	///TODO check for errors (GLERROR)

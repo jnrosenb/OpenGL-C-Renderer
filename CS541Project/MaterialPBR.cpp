@@ -1,3 +1,14 @@
+//////////////////////////////////////////
+// HEADER								//
+//										//
+// Name: Jose Rosenbluth Chiu			//
+// Course Number: CS541					//
+// Programming Assignment number: #5	//
+// Task #1								//
+// Due date: 12/06/2018       			//
+//                  					//
+//////////////////////////////////////////
+
 #include "MaterialPBR.h"
 #include <iostream>
 #include "client.h"
@@ -95,10 +106,13 @@ void MaterialPBR::sendUniformValues(glm::mat4& M, glm::mat4& NT, glm::mat4 const
 
 void MaterialPBR::bindTexture()
 {
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, 0);
-
-	//TODO check for errors (GLERROR)
+	if (texture != 0) 
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		GLint uTexture = glGetUniformLocation(program, "diffuseTexture");
+		glUniform1i(uTexture, 0);
+	}
 }
 
 GLuint MaterialPBR::getProgram() 

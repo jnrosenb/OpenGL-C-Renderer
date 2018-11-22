@@ -26,8 +26,6 @@
     <None Include="ShadowMap.vert" />
     <None Include="SkyBox.frag" />
     <None Include="Skybox.vert" />
-    <None Include="SkyDome.frag" />
-    <None Include="SkyDome.vert" />
     <None Include="Solid.frag" />
     <None Include="Solid.vert" />
     <None Include="Texture.frag" />

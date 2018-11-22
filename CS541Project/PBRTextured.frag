@@ -17,8 +17,8 @@ uniform float perm;
 uniform vec3 diffuseColor;
 uniform vec4 lightColor[MAX_LIGHTS];
 uniform int lightCount;
-uniform sampler2D textureSampler;
-uniform sampler2D shadowMap;
+uniform sampler2D diffuseTexture;
+uniform sampler2D shadowTexture;
 
 in vec4 normal_vector;
 in vec4 view_vector;
@@ -28,10 +28,14 @@ in vec4 shadowSpacePos;
 
 out vec4 frag_color;
 
+float shadowCalculations(vec4 ShadowSpacePos);
+
 void main(void) 
 {
+  float shadowed = shadowCalculations(shadowSpacePos);
+
   //Get the texture color from sampler
-  vec3 textDiffuse = texture(textureSampler, uv).xyz;
+  vec3 textDiffuse = texture(diffuseTexture, uv).xyz;
 
   ///Ambient effect is calculated once, does not depend of num of lights
   //vec3 ambient = 0.25f * vec3(1, 1, 1) * diffuseColor;
@@ -82,7 +86,9 @@ void main(void)
     radiance += (diffContribution * (textDiffuse / M_PI) + BRDF ) * MdotL * lightColor[i].xyz * dwl;
     //radiance += (diffContribution * (diffuseColor / M_PI) + BRDF ) * MdotL * lightColor[i].xyz * dwl;
   }
-  vec3 finalColor = radiance  + ambient;
+
+  //vec3 finalColor = radiance  + ambient;
+  vec3 finalColor = ambient + shadowed * ( radiance );
   frag_color = vec4(finalColor ,1.0f);
 }
 
@@ -153,5 +159,28 @@ float getDistributionTerm2(float MdotH)
   float den = M_PI * pow((dot2*(rgh2 - 1) + 1), 2);
   float num = rgh2;
   return num/den;
+}
+
+float shadowCalculations(vec4 ShadowSpacePos)
+{
+	///////////////////////////////
+	// CHANGE FOR EFFICIENT CODE //
+	///////////////////////////////
+	
+	//if (ShadowSpacePos.w < 0.0f)
+	//	return 1.0f;
+
+	vec3 ndc = vec3(ShadowSpacePos.xyz / ShadowSpacePos.w);
+	ndc = (ndc * 0.5f) + 0.5f;
+
+	float depthTest = (texture(shadowTexture, ndc.xy)).x;
+	float currentDepth = ndc.z;
+
+	if ((ndc.x - 0.5f)*(ndc.x - 0.5f) + (ndc.y - 0.5f)*(ndc.y - 0.5f) > 0.25f)
+		return 0.0f;
+
+	float bias = 0.0005f;
+	float shadow = currentDepth - bias < depthTest  ? 1.0f : 0.0f;
+	return (shadow);
 }
 

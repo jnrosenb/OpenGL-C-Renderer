@@ -19,9 +19,11 @@ uniform mat4 view_matrix;
 uniform mat4 model_matrix;
 uniform mat4 normal_matrix;
 uniform vec4 light_position;
+uniform mat4 lTransformation;
 
 out vec4 normal_vector;
 out vec4 light_vector;
+out vec4 shadowSpacePos;
 
 void main() 
 {
@@ -29,5 +31,7 @@ void main()
   gl_Position = persp_matrix * view_matrix * P;
   normal_vector = normal_matrix * normal;
   light_vector = light_position - P;
+
+  shadowSpacePos = lTransformation * P;
 }
 

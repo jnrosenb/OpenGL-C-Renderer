@@ -1,3 +1,14 @@
+//////////////////////////////////////////
+// HEADER								//
+//										//
+// Name: Jose Rosenbluth Chiu			//
+// Course Number: CS541					//
+// Programming Assignment number: #5	//
+// Task #1								//
+// Due date: 12/06/2018       			//
+//                  					//
+//////////////////////////////////////////
+
 #ifndef MATERIALPBR_H
 #define MATERIALPBR_H
 

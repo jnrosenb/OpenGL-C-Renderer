@@ -27,9 +27,6 @@
     <None Include="SkyBox.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="SkyDome.frag">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Solid.frag">
       <Filter>Shaders</Filter>
     </None>
@@ -40,9 +37,6 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Skybox.vert">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="SkyDome.vert">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Solid.vert">

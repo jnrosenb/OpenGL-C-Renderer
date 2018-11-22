@@ -3,9 +3,9 @@
 //										//
 // Name: Jose Rosenbluth Chiu			//
 // Course Number: CS541					//
-// Programming Assignment number: #3	//
-// Task #2								//
-// Due date: 10/25/2018       			//
+// Programming Assignment number: #5	//
+// Task #1								//
+// Due date: 12/06/2018       			//
 //                  					//
 //////////////////////////////////////////
 
@@ -234,15 +234,7 @@ namespace cs541
 		glUseProgram(ShadowMapProgram);
 
 		///Prepare shadow map and draw
-		//glClearColor(0.0f, 0.0f, 0.0f, 1);
-		//glClear(GL_COLOR_BUFFER_BIT);
-		//glClearDepth(1);
 		glClear(GL_DEPTH_BUFFER_BIT);
-
-		/*EXPERIMENT//////////////////////////////////////////////
-		glEnable(GL_POLYGON_OFFSET_FILL);
-		glPolygonOffset(1.0f, 4.0f);
-		//EXPERIMENT////////////////////////////////////////////*/
 
 		setupShadowMapMatrices(light1[0], lightLookAt[0]);
 		renderShadowMap();
@@ -250,10 +242,6 @@ namespace cs541
 		///Back to original settings
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0, width, height);
-
-		/*EXPERIMENT//////////////////////////////////////////////
-		glDisable(GL_POLYGON_OFFSET_FILL);
-		//EXPERIMENT////////////////////////////////////////////*/
 
 		/////////////////////////////////////////
 		////  SECOND PASS				/////////
@@ -268,9 +256,12 @@ namespace cs541
 		//Bind the shadowmap as texture1
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, shadowFBTexture);
-		GLint uShadowMap = glGetUniformLocation(TexturedProgram, "shadowTexture");
+		GLint uShadowMap_1 = glGetUniformLocation(TexturedProgram, "shadowTexture");
+		GLint uShadowMap_2 = glGetUniformLocation(PBRProgram, "shadowTexture");
 		glUseProgram(TexturedProgram);
-		glUniform1i(uShadowMap, 1);
+		glUniform1i(uShadowMap_1, 1); 
+		glUseProgram(PBRProgram);
+		glUniform1i(uShadowMap_2, 1);
 		glUseProgram(0);
 
 		//For every material, give them the view and proj 
@@ -332,13 +323,6 @@ namespace cs541
 		//float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
-		///Generate a renderBuffer object for the depth and stencil
-		//unsigned int renderBObj;
-		//glGenRenderbuffers(1, &renderBObj);
-		//glBindRenderbuffer(GL_RENDERBUFFER, renderBObj);
-		//glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 1024);
-		//glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBObj);
-
 		//Just to be sure
 		glBindFramebuffer(GL_FRAMEBUFFER, shadowFrameBuffer);
 
@@ -365,7 +349,7 @@ namespace cs541
 		
 		float near_plane = 0.1f, far_plane = 1000.0f;
 		//glm::mat4 lightProjection = glm::perspective(PI/2.0f, 1.0f, near_plane, far_plane);
-		glm::mat4 lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
+		glm::mat4 lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
 
 		///Get the light's projection matrix (perspective for now)
 		///TODO: FIX ORTHO IN CS541 *******************************
@@ -414,11 +398,11 @@ namespace cs541
 		glm::vec4 unlitpos = light1[0];
 		glm::vec4 unlitrotAxis = { 1.0f, 0.0f, 0.0f, 0.0f };
 		actors[ActorCount]->setupMatrices(unlitpos, 0.0f, unlitrotAxis, 2.0f);
-		++ActorCount;
+		++ActorCount;//*/
 
 		//Create an actor with plane mesh --- POLAR SPHERE PLANE ---
 		actors[ActorCount] = new Actor(0);
-		actors[ActorCount]->init(VertexArrayObjects[3], plane->faceCount(), materials[9]);
+		actors[ActorCount]->init(VertexArrayObjects[3], plane->faceCount(), materials[0]);
 		glm::vec4 pos = { 0.0f, 10.0f, -30.0f, 1.0f };
 		glm::vec4 rotAxis = { 1.0f, 0.0f, 0.0f, 0.0f };
 		actors[ActorCount]->setupMatrices(pos, 0.0f, rotAxis, 10.0f);
@@ -426,7 +410,7 @@ namespace cs541
 
 		//Create an actor with plane mesh --- FLOOR PLANE ---
 		actors[ActorCount] = new Actor(0);
-		actors[ActorCount]->init(VertexArrayObjects[2], plane->faceCount(), materials[9]);
+		actors[ActorCount]->init(VertexArrayObjects[2], plane->faceCount(), materials[7]);
 		glm::vec4 pos2 = { 0.0f, -10.0f, 0.0f, 1.0f };
 		glm::vec4 rotAxis2 = { 1.0f, 0.0f, 0.0f, 0.0f };
 		actors[ActorCount]->setupMatrices(pos2, -90.0f, rotAxis2, 400.0f);
@@ -434,8 +418,8 @@ namespace cs541
 
 		//Create an actor with torus mesh for light, passes a 1 for animation
 		actors[ActorCount] = new Actor(1);
-		actors[ActorCount]->init(VertexArrayObjects[0], torus->faceCount(), materials[9]);
-		//actors[ActorCount]->init(VertexArrayObjects[0], torus->faceCount(), materials[2]);
+		//actors[ActorCount]->init(VertexArrayObjects[0], torus->faceCount(), materials[6]);
+		actors[ActorCount]->init(VertexArrayObjects[0], torus->faceCount(), materials[2]);
 		glm::vec4 pos3 = { 20.0f, 10.0f, -20.0f, 1.0f };
 		glm::vec4 rotAxis3 = { 0.0f, 0.0f, 1.0f, 0.0f };
 		actors[ActorCount]->setupMatrices(pos3, 60.0f, rotAxis3, 5.0f);
@@ -443,50 +427,50 @@ namespace cs541
 
 		//Create an actor with torus mesh for light, passes a 1 for animation
 		actors[ActorCount] = new Actor(1);
-		actors[ActorCount]->init(VertexArrayObjects[0], torus->faceCount(), materials[9]);
-		//actors[ActorCount]->init(VertexArrayObjects[0], torus->faceCount(), materials[4]);
+		actors[ActorCount]->init(VertexArrayObjects[0], torus->faceCount(), materials[3]);
+		//actors[ActorCount]->init(VertexArrayObjects[0], torus->faceCount(), materials[6]);
+		glm::vec4 pos5 = { 10.0f, -8.0f, -40.0f, 1.0f };
+		glm::vec4 rotAxis5 = { 0.0f, 0.0f, 0.0f, 0.0f };
+		actors[ActorCount]->setupMatrices(pos5, 0.0f, rotAxis5, 15.0f);
+		++ActorCount;//*/
+
+		//Create an actor with torus mesh for light, passes a 1 for animation
+		actors[ActorCount] = new Actor(1);
+		//actors[ActorCount]->init(VertexArrayObjects[0], torus->faceCount(), materials[9]);
+		actors[ActorCount]->init(VertexArrayObjects[0], torus->faceCount(), materials[4]);
 		glm::vec4 pos4 = { -20.0f, -10.0f, -20.0f, 1.0f };
 		glm::vec4 rotAxis4 = { 0.0f, 0.0f, 1.0f, 0.0f };
 		actors[ActorCount]->setupMatrices(pos4, 0.0f, rotAxis4, 10.0f);
-		++ActorCount;//*/
+		++ActorCount;
 
-		//Create an actor with plane mesh
+		//Create an actor with plane mesh WALLS (leave material index 9)
 		actors[ActorCount] = new Actor(0);
 		actors[ActorCount]->init(VertexArrayObjects[2], plane->faceCount(), materials[9]);
 		glm::vec4 pos9 = { 0.0f, 20.0f, -50.0f, 1.0f };
 		glm::vec4 rotAxis9 = { 0.0f, 0.0f, 0.0f, 0.0f };
 		actors[ActorCount]->setupMatrices(pos9, 0.0f, rotAxis9, 100.0f);
-		++ActorCount;//*/
+		++ActorCount;
 		//Create an actor with plane mesh
 		actors[ActorCount] = new Actor(0);
 		actors[ActorCount]->init(VertexArrayObjects[2], plane->faceCount(), materials[9]);
 		glm::vec4 pos_9 = { -100.0f, 20.0f, 50.0f, 1.0f };
 		glm::vec4 rotAxis_9 = { 0.0f, 1.0f, 0.0f, 0.0f };
 		actors[ActorCount]->setupMatrices(pos_9, 90.0f, rotAxis_9, 100.0f);
-		++ActorCount;//*/
+		++ActorCount;
 		//Create an actor with plane mesh
 		actors[ActorCount] = new Actor(0);
 		actors[ActorCount]->init(VertexArrayObjects[2], plane->faceCount(), materials[9]);
 		glm::vec4 pos__9 = { 100.0f, 20.0f, 50.0f, 1.0f };
 		glm::vec4 rotAxis__9 = { 0.0f, 1.0f, 0.0f, 0.0f };
 		actors[ActorCount]->setupMatrices(pos__9, -90.0f, rotAxis__9, 100.0f);
-		++ActorCount;//*/
+		++ActorCount;
 
-		//Create an actor with plane mesh (TILING)
+		/*Create an actor with plane mesh (TILING)
 		actors[ActorCount] = new Actor(0);
 		actors[ActorCount]->init(VertexArrayObjects[2], plane->faceCount(), materials[9]);
 		glm::vec4 pos10 = { 15.0f, 10.0f, -50.0f, 1.0f };
 		glm::vec4 rotAxis10 = { 0.0f, 0.0f, 0.0f, 0.0f };
 		actors[ActorCount]->setupMatrices(pos10, 0.0f, rotAxis10, 10.0f);
-		++ActorCount;
-
-		//Create an actor with torus mesh for light, passes a 1 for animation
-		actors[ActorCount] = new Actor(1);
-		//actors[ActorCount]->init(VertexArrayObjects[0], torus->faceCount(), materials[3]);
-		actors[ActorCount]->init(VertexArrayObjects[0], torus->faceCount(), materials[9]);
-		glm::vec4 pos5 = { 10.0f, -8.0f, -40.0f, 1.0f };
-		glm::vec4 rotAxis5 = { 0.0f, 0.0f, 0.0f, 0.0f };
-		actors[ActorCount]->setupMatrices(pos5, 0.0f, rotAxis5, 15.0f);
 		++ActorCount;//*/
 		
 		//Create the SKYBOX with cube mesh (renders last) --- SKY-BOX ---
@@ -527,8 +511,8 @@ namespace cs541
 	{
 		cout << "Starting to create Materials!" << endl;
 
-		//SKYBOX MATERIAL (index 0, texture index 3)
-		materials[MaterialCount++] = new MaterialTextured(TexturedProgram, textureBufferName[3], 0.8f, 5.0f);
+		//POLAR SPHERE MATERIAL (index 0, texture index 3)
+		materials[MaterialCount++] = new MaterialTextured(TexturedProgram, textureBufferName[3], 0.8f, 20.0f);
 
 		//FLOOR PLANE MATERIAL (index 1, texture index 4, brick.bmp)
 		materials[MaterialCount++] = new MaterialTextured(TexturedProgram, textureBufferName[4], 0.8f, 10.0f);
@@ -545,18 +529,17 @@ namespace cs541
 		//SKYBOX MATERIAL (index 5, texture index 5, cubemap texture)
 		materials[MaterialCount++] = new MaterialSkybox(SkyboxProgram, textureBufferName[5]);
 
-		///NOT TILING TEXT MATERIAL (index 6, texture index 6, brick.bmp) //- SHADOW MAP TEXTURE -//
-		materials[MaterialCount++] = new MaterialTextured(TexturedProgram, shadowFBTexture, 0.00f, 1.0f);
-		//materials[MaterialCount++] = new MaterialTextured(TexturedProgram, textureBufferName[6], 0.8f, 10.0f);
+		//NOT TILING TEXT MATERIAL (index 6, texture index 6, brick.bmp)
+		materials[MaterialCount++] = new MaterialTextured(TexturedProgram, textureBufferName[6], 0.8f, 10.0f);
 
 		//FLOOR PLANE TEXTURED PBR MATERIAL (index 7, grass.bmp)
 		materials[MaterialCount++] = new MaterialTextured(TexturedProgram, textureBufferName[7], 0.8f, 10.0f);
 
 		//LIGHT MATERIAL UNLIT (index 8, no texture)
-		materials[MaterialCount++] = new UnlitMaterial(UnlitProgram, 0);
+		materials[MaterialCount++] = new UnlitMaterial(UnlitProgram, NULL);
 
 		//Lamber grey # INDEX 9
-		materials[MaterialCount++] = new MaterialTextured(TexturedProgram, textureBufferName[6], 0.01f, 1.0f);
+		materials[MaterialCount++] = new MaterialTextured(TexturedProgram, textureBufferName[4], 0.05f, 1.0f);
 		//materials[MaterialCount++] = new MaterialTextured(TexturedProgram, 0, 0.8f, 10.0f);
 	}
 
@@ -778,6 +761,16 @@ namespace cs541
 				texcoord[2 * i + 1] = polar->uvArray()[i].y;
 			}
 		}
+		else if (dynamic_cast<Plane*>(mesh))
+		{
+			glm::mat4 Std2Unit = cs541::scale(0.5f, 0.5f, 1) * cs541::translate(glm::vec4(1, 1, 0, 0));
+			for (int i = 0; i < mesh->vertexCount(); ++i)
+			{
+				glm::vec4 uv = Std2Unit * mesh->vertexArray()[i];
+				texcoord[2 * i + 0] = 10 * uv[0];
+				texcoord[2 * i + 1] = 10 * uv[1];
+			}
+		}
 		else
 		{
 			glm::mat4 Std2Unit = cs541::scale(0.5f, 0.5f, 1) * cs541::translate(glm::vec4(1, 1, 0, 0));
@@ -960,10 +953,11 @@ namespace cs541
 	
 	void Client::RenderLightDebugDir()
 	{
+		float length = 0.01f;
 		float vertices[] = 
 		{
 			0, 0, 0,
-			5*lightLookAt[0].x, 5*lightLookAt[0].y, 5*lightLookAt[0].z
+			length*lightLookAt[0].x, length*lightLookAt[0].y, length*lightLookAt[0].z
 		};
 
 		glLineWidth(8.0f);

@@ -69,13 +69,7 @@ float shadowCalculations(vec4 ShadowSpacePos)
 
 	float depthTest = (texture(shadowTexture, ndc.xy)).x;
 	float currentDepth = ndc.z;
-	//currentDepth = min(1.0f, currentDepth);
-	//currentDepth = max(0.0f, currentDepth);
 
-	//if (ndc.x < 0.0f || ndc.y < 0.0f)
-	//	return 0.0f;
-	//if (ndc.x >  1.0f || ndc.y > 1.0f)
-	//	return 0.0f;
 	if ((ndc.x - 0.5f)*(ndc.x - 0.5f) + (ndc.y - 0.5f)*(ndc.y - 0.5f) > 0.25f)
 		return 0.0f;
 
