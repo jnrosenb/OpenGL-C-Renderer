@@ -34,7 +34,7 @@ g++ Program.cpp Camera.cpp Affine.cpp Client.cpp Actor.cpp Torus.cpp Sphere.cpp 
   This is to facilitate seeing the light and shadow interaction.
   
 - Also, I made the shader only lit up what is inside the light fustrum. This means the rest of the scene will look as if it 
-  was in   darkness (except for the skybox, which is unaffected).
+  was in darkness (except for the skybox, which is unaffected).
 
 - Move camera using:
 	W for forward,
