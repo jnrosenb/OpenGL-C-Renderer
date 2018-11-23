@@ -1,11 +1,11 @@
 //////////////////////////////////
-// HEADER			//
-//				//
-// Name: Jose Rosenbluth Chiu	//
-// Course Number: CS541	//
-// Assignment number: #5	//
-// Due date: 12/06/2018	//
-//				//
+// HEADER			 //
+//				 //
+// Name: Jose Rosenbluth Chiu	 //
+// Course Number: CS541	 //
+// Assignment number: #5	 //
+// Due date: 12/06/2018	 //
+//				 //
 //////////////////////////////////
 
 ///////////////////////////////////////////////
